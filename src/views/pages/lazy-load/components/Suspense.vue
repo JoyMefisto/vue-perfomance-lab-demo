@@ -20,7 +20,7 @@ const ErrorComponent = {
 
 const LazyProfilePositive = defineAsyncComponent({
   loader: () =>
-    new Promise((resolve) => {
+    new Promise<typeof import('./Profile.vue')>((resolve) => {
       setTimeout(() => {
         // For real usage:
         resolve(import('./Profile.vue'))

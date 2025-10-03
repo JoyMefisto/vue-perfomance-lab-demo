@@ -24,7 +24,7 @@ const lastTime = ref(performance.now())
 const fps = ref(0)
 const totalItems = 10000
 const renderStartTime = ref(0)
-const memoryCleanupInterval = ref<NodeJS.Timeout>()
+const memoryCleanupInterval = ref<ReturnType<typeof setTimeout>>()
 
 // Generate data with time measurement
 const generateItems = () => {
