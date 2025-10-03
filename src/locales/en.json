@@ -1,0 +1,160 @@
+{
+  "main": {
+    "title": "Optimization Examples for Vue 3",
+    "description": "Here are interactive examples that demonstrate the difference between optimized and non-optimized cases in Vue 3. Each test can be run manually by changing parameters and comparing execution time."
+  },
+  "cm": {
+    "title": "Computed vs Method",
+    "description": "Here are interactive examples that demonstrate the difference between non-optimized and optimized code in Vue 3. Each test can be run manually by changing parameters and comparing execution time.",
+    "fib": {
+      "title": "1) 🧮 Fib (Fibonacci)",
+      "one": "N — depth of calculation. The higher the number, the heavier the task.",
+      "two": "Iterations — number of repeated runs for performance measurement.",
+      "three": "In ❌ Not Optimized (method) version, the heavy fib() function is recalculated every time without cache.",
+      "four": "In ✅ Optimized (computed) version, computed is used, which caches the result and recalculates it only when N changes.",
+      "five": "👉 Here you can see how memoization with computed reduces the load.",
+      "notOptimized": "In this version, the function runs N times * iterations times",
+      "optimized": "Computed caches the result and recalculates only when N changes"
+    },
+    "filter": {
+      "title": "2) 🔍 Filter (Array filtering)",
+      "one": "Size — size of the source array (number of elements).",
+      "two": "Iterations — number of filtering repetitions.",
+      "three": "Query — the string used for filtering.",
+      "four": "In ❌ Not Optimized (method) version, the array is filtered again on every call.",
+      "five": "In ✅ Optimized (computed) version, the array is filtered once and the result is cached until query or size changes.",
+      "six": "👉 Here you can see how computed reduces redundant operations and speeds up application response.",
+      "notOptimized": "Filtering runs again on every iteration",
+      "optimized": "Computed caches the result — filtering is not repeated under the same conditions"
+    }
+  },
+  "dt": {
+    "title": "Debounce and Throttle",
+    "description": "Here are interactive examples that demonstrate debounce and throttle usage in Vue 3 with lodash. Each test can be run manually by changing parameters and comparing execution time.",
+    "short": {
+      "title": "Quick explanation",
+      "one": "Debounce — useful when you need to wait for the user to 'stop typing' and then perform one action. Examples: search, autosave. Recommended delay: 200–800ms depending on UX and network latency.",
+      "two": "Throttle — useful when you need to limit the call frequency but still perform the action regularly (e.g., live preview, scroll/resize handling, buttons, analytics). Recommended range: 100–1000ms depending on the task."
+    },
+    "debounce": {
+      "title": "1) Example: Debounce — search in a large list (lodash)",
+      "description": "Type text — the real 'search' is triggered with a delay (debounce). Model: simulate API + large array filtering.",
+      "one": "What it shows: while typing in the field, the request is not sent on every keystroke but with a delay (debounce) — this reduces the number of 'requests' to the server / filtering.",
+      "two": "Parameters: Debounce wait — delay (ms). Default is 300ms.",
+      "three": "How to test: type quickly — see that Requests increase less often than the number of typed characters. Last latency shows simulated request time."
+    },
+    "throttle": {
+      "title": "2) Example: Throttle — buttons (lodash throttle)",
+      "description": "The button triggers a heavy action, but throttled — it fires no more than once per X ms.",
+      "one": "What it shows: if the button triggers a heavy action (e.g., log or analytics), throttle limits the frequency of calls (e.g., max once per second). Here lodash/throttle is used.",
+      "two": "Parameters: Wait — milliseconds.",
+      "three": "How to test: click the button quickly — Requests increase no more often than the set time. Last latency shows simulated request time."
+    }
+  },
+  "render": {
+    "title": "Rerender",
+    "description1": "Here are interactive examples that demonstrate the difference in rendering speed in Vue 3. Each test can be run manually to compare execution time.",
+    "description2": "All examples use a counter and a list of 10,000 elements. The differences between examples are in {link} work and list implementation",
+    "description2Link": "patching",
+    "description3": "In Vue 3, patching is the process of updating the real DOM (Document Object Model) based on comparing the new virtual DOM (vdom) with the previous one to apply minimal and necessary changes. When data changes, Vue creates a new virtual DOM, then the patching mechanism compares it with the old one and calculates exact operations to update the real DOM instead of rebuilding it completely.",
+    "notOptimized": {
+      "title": "1) Example: ❌ Not Optimized",
+      "one": "Patching runs on every counter change, increasing render time",
+      "two": "On each click, the entire list (10,000 elements) is re-rendered"
+    },
+    "optimized": {
+      "title": "2) Example: ✅ Optimized (v-memo + child component)",
+      "one": "The list is moved into a separate component and protected by v-memo",
+      "two": "Patching runs only on change",
+      "three": "Does not touch DOM subtree if dependencies didn’t change (10,000 elements)",
+      "four": "When you have a complex DOM and want to optimize part of the tree (e.g., nested lists, forms, cards)",
+      "five": "Works only in Vue ≥ 3.3, adds runtime check"
+    },
+    "explanation1": {
+      "title": "Explanation: why Optimized v-memo is faster than Not Optimized",
+      "one": "In NotOptimized, the list is declared in the same component: when the counter changes, Vue re-renders the parent, and during patching it has to walk through 10,000 li. Even if DOM patching changes little, iterating the array + creating/comparing VNodes costs time.",
+      "two": "In Optimized v-memo:",
+      "three": "The list is moved into a child component HeavyList.",
+      "four": "HeavyList uses v-memo=\"[props.items]\". On parent update Vue sees props.items is the same reference > v-memo says \"do nothing\" and skips patching the list subtree. This saves a lot of work.",
+      "five": "await nextTick() measures the time between state change and DOM update completion. In NotOptimized this time is much longer."
+    },
+    "optimizedRef": {
+      "title": "3) Example: 🔹 Optimized (shallowRef + child component)",
+      "one": "The list is moved into a separate component",
+      "two": "Disables deep reactivity, tracks only reference (10,000 elements)",
+      "three": "Useful for large data structures (arrays, graphs) that rarely change as a whole",
+      "four": "If you mutate nested data > Vue won’t detect changes"
+    },
+    "optimizedFunc": {
+      "title": "4) Example: 🔹 Optimized (functional component)",
+      "one": "The list is moved into a separate component",
+      "two": "Minimal overhead: pure function from props → VNode",
+      "three": "For static large chunks where lifecycle/reactivity is not needed (10,000 elements)",
+      "four": "Harder to manage state, no ref, watch, provide/inject"
+    },
+    "explanation2": {
+      "title": "Explanation: why Optimized (shallowRef + child component) and Optimized (functional component) are faster than Optimized v-memo",
+      "one": "Optimized (shallowRef + child component): works the same. Important: array object (or nested structures) inside shallowRef will not be deeply proxied. Vue only tracks the reference. If you replace items.value = [...items.value] — it triggers, but if you do items.value[0].child.push(...) — it won’t. Nested updates must be applied manually (e.g., via a new array).",
+      "two": "Optimized (functional component): the whole tree is rendered as is. It will re-render fully but without overhead of component instances. Faster if the tree is large but rarely changes. No lifecycles, no reactivity wrapping → pure render(). Only props → vnodes."
+    }
+  },
+  "virtual": {
+    "title": "Virtual Scrolling",
+    "description": "Here are interactive examples that demonstrate the difference between non-optimized and optimized lists in Vue 3. Each list has metrics for comparison.",
+    "ex1": {
+      "title": "1) Example: 📋 Regular List - when to use:",
+      "description": "Ideal for static data up to 100 elements where simplicity is key. Use when you need native browser scrolling and SEO-friendly initial render. Great for admin panels and prototypes where performance is not critical."
+    },
+    "ex2": {
+      "title": "2) Example: 🚀 Virtual List - when to use:",
+      "description": "Essential for dynamic lists with 100+ elements and heavy components. Critical in real-time apps like chats and dashboards where data is constantly updating. Especially effective on mobile devices with limited memory. This example uses"
+    },
+    "spec": {
+      "title": "💻 System specs during benchmarks",
+      "important": "💡 Important: Benchmarks were run on the following system:",
+      "cpu": "Processor",
+      "ram": "RAM",
+      "browser": "Browser",
+      "platform": "Platform"
+    },
+    "indicators": {
+      "title": "📊 List metrics",
+      "table": {
+        "col": {
+          "one": "Metric",
+          "two": "Regular list",
+          "three": "Virtual list",
+          "four": "Gain"
+        },
+        "row": {
+          "one": "Initial render",
+          "two": "FPS while scrolling",
+          "three": "Memory usage",
+          "four": "DOM elements",
+          "five": "DOM nodes"
+        },
+        "one": "Regular list (issues)",
+        "two": "Virtual list (solution)",
+        "three": "Performance improvement"
+      }
+    }
+  },
+  "lazy": {
+    "title": "Lazy component",
+    "description": "Here are interactive examples that demonstrate lazy loading of components in Vue 3. Used to reduce bundle size and speed up initial render.",
+    "define": {
+      "title": "1) defineAsyncComponent",
+      "one": "defineAsyncComponent without options: simply loads a component (e.g., on button click)."
+    },
+    "defineOption": {
+      "title": "2) Example: defineAsyncComponent (options: loader, timeout, error)",
+      "one": "defineAsyncComponent: manages loading with options (e.g., shows its loader only if loading lasts > 200ms).",
+      "two": "defineAsyncComponent: handles errors (e.g., shows custom errorComponent and retries loading)."
+    },
+    "defineSuspense": {
+      "title": "3) Example: defineAsyncComponent + Suspense",
+      "one": "Suspense: takes over loading control (e.g., shows custom loader).",
+      "two": "defineAsyncComponent: handles errors (e.g., shows custom errorComponent)."
+    }
+  }
+}
