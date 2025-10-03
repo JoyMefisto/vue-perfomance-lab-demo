@@ -3,7 +3,7 @@
 Demonstration project showcasing **Vue 3 performance optimizations** with interactive examples.  
 The project was created for educational purposes to demonstrate frontend engineering skills, code organization, and optimization practices.
 
-🚀 Live demo: 🔗[vue-performance-lab-demo.vercel.app](https://vue-performance-lab-demo.vercel.app/)
+🚀 Live demo: 🔗[vue-perfomance-lab-demo.vercel.app](https://vue-perfomance-lab-demo.vercel.app/)
 
 🌍 **Localization:** 🇷🇺 Russian + 🇬🇧 English
 
